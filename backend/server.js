@@ -32,16 +32,17 @@ app.use('/api/upload', uploadRoutes)
 app.get('/api/config/paypal', (req, res) => 
 res.send(process.env.PAYPAL_CLIENT_ID) );
 
-const __dirname = path.resolve()
-console.log(__dirname)
-app.use('/uploads', express.static(path.join(__dirname,'/uploads')))
+//const __dirname = path.resolve()
+const currentPath = process.cwd();
+console.log(currentPath)
+app.use('/uploads', express.static(path.join(currentPath,'/uploads')))
 
 if(process.env.NODE_ENV === 'production'){
-    app.use(express.static(path.join(__dirname, '../frontend/build')))
+    app.use(express.static(path.join(currentPath, '/frontend/build')))
 
     app.get('*',(req, res) => 
-    //res.sendFile(path.resolve(__dirname, '..', 'frontend', 'build', 'index.html')))
-    res.send(__dirname))
+    res.sendFile(path.resolve(currentPath, 'frontend', 'build', 'index.html')))
+    //res.send(currentPath))
 } else {
     app.get('/', (req , res) => {
         res.send('API is running.!!')
